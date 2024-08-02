@@ -804,5 +804,38 @@ PointCloud::HiddenPointRemoval(const Eigen::Vector3d &camera_location,
     return std::make_tuple(visible_mesh, pt_map);
 }
 
+// UniformDownSampleAndTrace add by baiyuntao
+std::tuple<std::shared_ptr<PointCloud>, std::vector<size_t>> 
+PointCloud::UniformDownSampleAndTrace(size_t every_k_points) const {
+    if (every_k_points == 0) {
+        utility::LogError("Illegal sample rate.");
+    }
+    std::vector<size_t> indices;
+    for (size_t i = 0; i < points_.size(); i += every_k_points) {
+        indices.push_back(i);
+    }
+    return std::make_tuple(SelectByIndex(indices), indices);
+
+}
+
+// RandomDownSampleAndTrace add by baiyuntao
+std::tuple<std::shared_ptr<PointCloud>, std::vector<size_t>>
+PointCloud::RandomDownSampleAndTrace(double sampling_ratio) const {
+    if (sampling_ratio < 0 || sampling_ratio > 1) {
+        utility::LogError(
+                "Illegal sampling_ratio {}, sampling_ratio must be between 0 "
+                "and 1.");
+    }
+    std::vector<size_t> indices(points_.size());
+    std::iota(std::begin(indices), std::end(indices), (size_t)0);
+    {
+        std::lock_guard<std::mutex> lock(*utility::random::GetMutex());
+        std::shuffle(indices.begin(), indices.end(),
+                     *utility::random::GetEngine());
+    }
+    indices.resize((int)(sampling_ratio * points_.size()));
+    return std::make_tuple(SelectByIndex(indices), indices);
+}
+
 }  // namespace geometry
 }  // namespace open3d
