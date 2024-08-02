@@ -459,6 +459,16 @@ public:
             const VoxelGrid &voxel_grid);
 
 public:
+    /*
+    UniformDownSampleAndTrace() add by baiyuntao 20240718 
+    */
+    std::tuple<std::shared_ptr<PointCloud>, std::vector<size_t>> UniformDownSampleAndTrace(size_t every_k_points) const;
+    /*
+    RandomDownSampleAndTrace() add by baiyuntao 20240718
+    */
+    std::tuple<std::shared_ptr<PointCloud>, std::vector<size_t>> RandomDownSampleAndTrace(double sampling_ratio) const;
+
+public:
     /// Points coordinates.
     std::vector<Eigen::Vector3d> points_;
     /// Points normals.
