@@ -306,11 +306,11 @@ if (BUILD_CUDA_MODULE
     AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.29"
 )
     # Keep C++11 standard for unaffected C++ files, but use C++11 for CUDA files.
-    set(CMAKE_CUDA_STANDARD 11)
+    set(CMAKE_CUDA_STANDARD 17)
     # Suppress warnings for deprecated C++11 functions.
-    add_compile_definitions($<$<COMPILE_LANGUAGE:CUDA>:_SILENCE_CXX11_RESULT_OF_DEPRECATION_WARNING>)
-    message(WARNING "Visual Studio 16.10 (MSVC 19.29) introduced a compiler bug when compiling CUDA code with C++11. "
-        "Workaround this bug by setting the CUDA standard to C++11.")
+    add_compile_definitions($<$<COMPILE_LANGUAGE:CUDA>:_SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING>)
+    message(WARNING "Visual Studio 16.10 (MSVC 19.29) introduced a compiler bug when compiling CUDA code with C++17. "
+        "Workaround this bug by setting the CUDA standard to C++17.")
 endif()
 
 # CMake modules
