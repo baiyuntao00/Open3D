@@ -291,12 +291,12 @@ endif()
 
 # Global flag to set CXX standard.
 # This does not affect 3rd party libraries.
-# Tensorflow 2.9+ requires cxx_17, but MSVC 19.29 throws errors with C++17
+# Tensorflow 2.9+ requires cxx_11, but MSVC 19.29 throws errors with C++11
 # enabled.
 if (BUILD_SYCL_MODULE OR BUILD_TENSORFLOW_OPS)
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 11)
 else()
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 11)
 endif()
 set(CMAKE_CXX_EXTENSIONS OFF)   # Improved compatibility
 
@@ -305,12 +305,12 @@ if (BUILD_CUDA_MODULE
     AND CMAKE_CXX_COMPILER MATCHES "MSVC"
     AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.29"
 )
-    # Keep C++14 standard for unaffected C++ files, but use C++17 for CUDA files.
-    set(CMAKE_CUDA_STANDARD 14)
-    # Suppress warnings for deprecated C++17 functions.
-    add_compile_definitions($<$<COMPILE_LANGUAGE:CUDA>:_SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING>)
-    message(WARNING "Visual Studio 16.10 (MSVC 19.29) introduced a compiler bug when compiling CUDA code with C++14. "
-        "Workaround this bug by setting the CUDA standard to C++17.")
+    # Keep C++11 standard for unaffected C++ files, but use C++11 for CUDA files.
+    set(CMAKE_CUDA_STANDARD 11)
+    # Suppress warnings for deprecated C++11 functions.
+    add_compile_definitions($<$<COMPILE_LANGUAGE:CUDA>:_SILENCE_CXX11_RESULT_OF_DEPRECATION_WARNING>)
+    message(WARNING "Visual Studio 16.10 (MSVC 19.29) introduced a compiler bug when compiling CUDA code with C++11. "
+        "Workaround this bug by setting the CUDA standard to C++11.")
 endif()
 
 # CMake modules
